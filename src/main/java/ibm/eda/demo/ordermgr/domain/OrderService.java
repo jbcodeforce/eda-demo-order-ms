@@ -46,7 +46,7 @@ public class OrderService {
 		        order.creationDate,
 				order.updateDate,
 				deliveryAddress,
-				OrderEventType.OrderCreatedEvent.name());	
+				"OrderCreatedEvent");	
 		try {
 			logger.info("emit order created event for " + order.getOrderID());
 			eventProducer.send(orderPayload);
@@ -81,7 +81,7 @@ public class OrderService {
 		        order.creationDate,
 				order.updateDate,
 				deliveryAddress,
-				OrderEventType.OrderUpdateEvent.name());	
+				"OrderUpdateEvent");	
 			try {
 				logger.info("emit order updated event for " + order.getOrderID());
 				eventProducer.send(orderPayload);

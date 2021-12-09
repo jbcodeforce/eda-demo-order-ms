@@ -2,6 +2,7 @@
 scriptDir=$(dirname $0)
 
 IMAGE_NAME=quay.io/ibmcase/eda-demo-order-ms
-./mvnw clean package -DskipTests
+#./mvnw package -DskipTests
+./mvnw clean package
 docker build -f src/main/docker/Dockerfile.jvm -t ${IMAGE_NAME} .
 docker push ${IMAGE_NAME}

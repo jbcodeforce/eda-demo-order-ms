@@ -27,7 +27,7 @@ spec:
         - /deployments/quarkus-run.jar
         command:
         - java
-        image: quay.io/ibmcase/eda-qs-order-ms
+        image: quay.io/ibmcase/eda-demo-order-ms
         imagePullPolicy: Always
         # imagePullPolicy: IfNotPresent
         env:
@@ -47,16 +47,9 @@ spec:
             secretKeyRef:
               key: user.password
               name: tls-user
-        - name: KAFKA_TOPIC_NAME
-          valueFrom:
-            configMapKeyRef:
-              name: qs-order-mgr-cm
-              key: KAFKA_TOPIC_NAME
-        - name: KAFKA_BOOTSTRAP_SERVERS
-          valueFrom:
-            configMapKeyRef:
-              name: qs-order-mgr-cm
-              key: KAFKA_BOOTSTRAP_SERVERS
+        envFrom:
+        - configMapRef:
+            name: qs-order-mgr-cm
         name: qs-order-ms
         ports:
         - containerPort: 8080

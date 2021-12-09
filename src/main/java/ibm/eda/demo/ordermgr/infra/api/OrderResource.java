@@ -2,6 +2,7 @@ package ibm.eda.demo.ordermgr.infra.api;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -13,11 +14,11 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
-import org.jboss.logging.Logger;
-
 import ibm.eda.demo.ordermgr.domain.OrderEntity;
 import ibm.eda.demo.ordermgr.domain.OrderService;
 import ibm.eda.demo.ordermgr.infra.api.dto.OrderDTO;
+import io.smallrye.mutiny.Multi;
+import io.smallrye.mutiny.Uni;
 
 @Path("/api/v1/orders")
 @Produces(MediaType.APPLICATION_JSON)
@@ -30,25 +31,26 @@ public class OrderResource {
     public OrderService service;
     
     @GET
-    public List<OrderDTO> getAllActiveOrders() {
+    public Multi<OrderDTO> getAllActiveOrders() {
         List<OrderDTO> l = new ArrayList<OrderDTO>();
         for (OrderEntity order : service.getAllOrders()) {
-            l.add(OrderDTO.from(order));
+            l.add(OrderDTO.fromEntity(order));
         }
-        return l;
+        return Multi.createFrom().items(l.stream());
     }
 
     @POST
-    public OrderDTO saveNewOrder(OrderDTO order) {
+    public Uni<OrderDTO> saveNewOrder(OrderDTO order) {
         logger.info("POST operation " + order.toString());
-        OrderEntity entity = OrderEntity.from(order);
-        return OrderDTO.from(service.createOrder(entity));
+        OrderEntity entity = OrderDTO.toEntity(order);
+        return Uni.createFrom().item(OrderDTO.fromEntity(service.createOrder(entity)));
     }
 
     @PUT
-    public void updateExistingOrder(OrderDTO order) {
-        OrderEntity entity = OrderEntity.from(order);
-        service.updateOrder(entity);
+    public Uni<OrderDTO> updateExistingOrder(OrderDTO order) {
+        logger.info("PUT operation " + order.toString());
+        OrderEntity entity = OrderDTO.toEntity(order);
+        return Uni.createFrom().item(OrderDTO.fromEntity(service.updateOrder(entity)));
     }
     
 }

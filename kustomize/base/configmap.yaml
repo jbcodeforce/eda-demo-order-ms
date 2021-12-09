@@ -6,12 +6,7 @@ data:
   APP_VERSION: 0.0.1
   KAFKA_BOOTSTRAP_SERVERS: dev-kafka-bootstrap.smq-dev.svc:9093
   KAFKA_TOPIC_NAME: qs-orders
-  KAFKA_SSL_PROTOCOL: TLSv1.2
-  KAFKA_SSL_TRUSTSTORE_LOCATION: /deployments/certs/server/ca.p12
-  KAFKA_SSL_TRUSTSTORE_TYPE: PKCS12
-  KAFKA_SSL_KEYSTORE_LOCATION: /deployments/certs/user/user.p12
-  KAFKA_SSL_KEYSTORE_TYPE: PKCS12
-  KAFKA_SECURITY_PROTOCOL: SSL
+  ES_APICURIO_URL: https://dev-ibm-es-ac-reg-external-smq-dev.cp4i-es-mq-1e3af63cfd19e855098d645120e18baf-0000.us-south.containers.appdomain.cloud
   
 
   

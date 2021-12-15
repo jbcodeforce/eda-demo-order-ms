@@ -2,21 +2,21 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app: qs-order-ms
-    app.kubernetes.io/name: qs-order-ms
+    app: eda-demo-order-ms
+    app.kubernetes.io/name: eda-demo-order-ms
     app.kubernetes.io/version: 1.0.0
-  name: qs-order-ms
+  name: eda-demo-order-ms
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app.kubernetes.io/name: qs-order-ms
+      app.kubernetes.io/name: eda-demo-order-ms
       app.kubernetes.io/version: 1.0.0
   template:
     metadata:
       labels:
-        app: qs-order-ms
-        app.kubernetes.io/name: qs-order-ms
+        app: eda-demo-order-ms
+        app.kubernetes.io/name: eda-demo-order-ms
         app.kubernetes.io/version: 1.0.0
     spec:
       containers:
@@ -37,20 +37,22 @@ spec:
               fieldPath: metadata.namespace
         - name: JAVA_APP_JAR
           value: /deployments/quarkus-run.jar
+        - name: KAFKA_SSL_TRUSTSTORE_LOCATION
+          value: /deployments/certs/server/ca.p12
         - name: KAFKA_SSL_TRUSTSTORE_PASSWORD
           valueFrom:
             secretKeyRef:
               key: ca.password
               name: dev-cluster-ca-cert
-        - name: KAFKA_SSL_KEYSTORE_PASSWORD
+        - name: JAAS_CFG
           valueFrom:
             secretKeyRef:
-              key: user.password
-              name: tls-user
+              key: sasl.jaas.config
+              name: scram-user
         envFrom:
         - configMapRef:
-            name: qs-order-mgr-cm
-        name: qs-order-ms
+            name: eda-demo-order-mgr-cm
+        name: eda-demo-order-ms
         ports:
         - containerPort: 8080
           name: http
@@ -64,15 +66,12 @@ spec:
           name: user-cert
           readOnly: false
           subPath: ""
-      serviceAccount: qs-prod-sa
       volumes:
       - name: kafka-cert
         secret:
-          defaultMode: 384
-          optional: true
+          optional: false
           secretName: dev-cluster-ca-cert
       - name: user-cert
         secret:
-          defaultMode: 384
-          optional: true
+          optional: false
           secretName: tls-user

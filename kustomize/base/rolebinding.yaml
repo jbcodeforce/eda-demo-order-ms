@@ -8,4 +8,4 @@ roleRef:
   name: view
 subjects:
 - kind: ServiceAccount
-  name: qs-prod-sa
+  name: eda-demo-prod-sa

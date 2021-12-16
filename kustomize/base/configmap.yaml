@@ -3,10 +3,9 @@ kind: ConfigMap
 metadata:
   name: eda-demo-order-mgr-cm
 data:
-  APP_VERSION: 0.0.2
-  MP_MESSAGING_CONNECTOR_SMALLRYE_KAFKA_BOOTSTRAP_SERVERS: dev-kafka-bootstrap.es-test.svc:9092
+  KAFKA_BOOTSTRAP_SERVERS: garage-kafka-bootstrap.cp4i.svc:9093
   KAFKA_TOPIC_NAME: edademo-orders
-  ES_APICURIO_URL:  https://dev-ibm-es-ac-reg-external-es-test.cp4i-es-mq-1e3af63cfd19e855098d645120e18baf-0000.us-south.containers.appdomain.cloud
-  MP_MESSAGING_CONNECTOR_SMALLRYE_KAFKA_SECURITY_PROTOCOL: PLAINTEXT
-
+  MP_MESSAGING_OUTGOING_ORDERS_TOPIC: edademo-orders
+  ES_APICURIO_URL: https://garage-ibm-es-ac-reg-external-cp4i.garage-to-60b41835e65227550a2031aa4f2061fc-0000.ca-tor.containers.appdomain.cloud
+  
   

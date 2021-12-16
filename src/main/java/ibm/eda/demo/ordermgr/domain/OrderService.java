@@ -9,10 +9,12 @@ import javax.inject.Inject;
 
 import org.eclipse.microprofile.reactive.messaging.Channel;
 import org.eclipse.microprofile.reactive.messaging.Emitter;
+import org.eclipse.microprofile.reactive.messaging.Message;
 
 import ibm.eda.demo.ordermgr.infra.events.Address;
 import ibm.eda.demo.ordermgr.infra.events.OrderEvent;
 import ibm.eda.demo.ordermgr.infra.repo.OrderRepository;
+import io.smallrye.reactive.messaging.kafka.KafkaRecord;
 
 
 @ApplicationScoped
@@ -48,8 +50,10 @@ public class OrderService {
 				deliveryAddress,
 				"OrderCreatedEvent");	
 		try {
-			logger.info("emit order created event for " + order.getOrderID());
-			eventProducer.send(orderPayload);
+			
+			Message<OrderEvent> record = KafkaRecord.of(order.getOrderID(),orderPayload);
+			eventProducer.send(record);
+			logger.info("order created event sent for " + order.getOrderID());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

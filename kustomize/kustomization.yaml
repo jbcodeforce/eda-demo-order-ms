@@ -1,5 +1,4 @@
 resources:
-  - ./environment/es/topic.yaml
   - ./base/serviceaccount.yaml
   - ./base/service.yaml
   - ./base/configmap.yaml

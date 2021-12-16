@@ -43,12 +43,14 @@ spec:
           valueFrom:
             secretKeyRef:
               key: ca.password
-              name: dev-cluster-ca-cert
-        - name: JAAS_CFG
+              name: garage-cluster-ca-cert
+        - name: KAFKA_SSL_KEYSTORE_LOCATION
+          value: /deployments/certs/user/user.p12
+        - name: KAFKA_SSL_KEYSTORE_PASSWORD
           valueFrom:
             secretKeyRef:
-              key: sasl.jaas.config
-              name: scram-user
+              key: user.password
+              name: tls-user
         envFrom:
         - configMapRef:
             name: eda-demo-order-mgr-cm
@@ -70,7 +72,7 @@ spec:
       - name: kafka-cert
         secret:
           optional: false
-          secretName: dev-cluster-ca-cert
+          secretName: garage-cluster-ca-cert
       - name: user-cert
         secret:
           optional: false

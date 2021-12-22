@@ -1,9 +1,43 @@
-# Quarkus app for producing event to Kafka via API
+# Quarkus app for producing Order events to Kafka using reactive messaging
 
+## How this app was created
+
+We use the new Quarkus CLI to create the basic project:
+
+```sh
+# Get the help
+quarkus create app --help
+# create a loan-origination bff app
+quarkus create app  -x smallrye-openapi,smallrye-health,resteasy-mutiny,registry-avro,metrics,reactive-messaging-kafka ibm.eda.demo:eda-demo-order-ms:1.0.0
+# Verify the app works
+cd eda-demo-order-ms
+quarkus dev
+curl localhost:8080
+```
+
+Push to a github repository that you need to create in github. 
+
+```sh
+git init
+git commit -m "first commit"
+git branch -M main
+git remote add origin https://github.com/jbcodeforce/eda-demo-order-ms.git
+git push -u origin main
+```
+
+The code is coming from the eda-quickstart repository, 
 
 ## Running the application in dev mode
 
-* You must start Kafka with docker compose using the compose file under `../environment/local/strimzi`:
+* **Dev mode**: You can run your application in dev mode (which will start RedPanda Kafka in a container) that enables live coding using:
+
+```shell script
+quarkus dev
+```
+
+Access the dev console
+
+* You mays also start Kafka with docker compose using the compose file provided
 
 ```sh
 docker compose up -d
@@ -12,22 +46,14 @@ docker compose up -d
 you should see four containers running:
 
 ```
- ⠿ Container apicurio       Started                                                                                                                     1.0s
  ⠿ Container zookeeper      Started                                                                                                                     1.0s
  ⠿ Container kafka          Started                                                                                                                     1.9s
- ⠿ Container kafdrop        Started  
 ```
 
-* Create the needed topic from `environment/local/strimzi` folder:
+* Create the needed topics:
 
 ```
-./createTopic.sh
-```
-
-You can run your application in dev mode that enables live coding using:
-
-```shell script
-quarkus dev
+./scripts/createTopic.sh
 ```
 
 * Go to the swagger UI: [http://localhost:8080/q/swagger-ui/](http://localhost:8080/q/swagger-ui/) or use
@@ -69,12 +95,12 @@ build a docker image and push it to a registry.
 
 We assume you have Event Streams  or Strimzi cluster deployed.
 
-* Create a OpenShift project: `oc new-project estest`
+* Create a OpenShift project: `oc new-project orderdemo`
 * Copy secrets for ca-certificates and tls-user
 
   ```sh
     # use namespace where kafka runs
-    NSSRC=eventstreams NSTGT=estest SECRET=tlsuser \
+    NSSRC=eventstreams NSTGT=orderdemo SECRET=tlsuser \
   	oc get secret $SECRET --namespace=$NSSRC -o json \
 	| jq  'del(.metadata.uid, .metadata.selfLink, .metadata.creationTimestamp, .metadata.ownerReferences)' \
 	| jq -r '.metadata.namespace="'${NSTGT}'"' \

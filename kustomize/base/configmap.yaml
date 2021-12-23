@@ -5,6 +5,7 @@ metadata:
 data:
   KAFKA_BOOTSTRAP_SERVERS: garage-kafka-bootstrap.cp4i.svc:9093
   KAFKA_TOPIC_NAME: edademo-orders
+  KAFKA_SECURITY_PROTOCOL: PLAINTEXT
   MP_MESSAGING_OUTGOING_ORDERS_TOPIC: edademo-orders
   ES_APICURIO_URL: https://garage-ibm-es-ac-reg-external-cp4i.garage-to-60b41835e65227550a2031aa4f2061fc-0000.ca-tor.containers.appdomain.cloud
   

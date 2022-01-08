@@ -1,5 +1,8 @@
 # Quarkus app for producing Order events to Kafka using reactive messaging
 
+This code is to present a Microprofile reactive messaging producer with Schema registry integration.
+This is an instantiation of EDA Quickstart template.
+
 ## How this app was created
 
 We use the new Quarkus CLI to create the basic project:

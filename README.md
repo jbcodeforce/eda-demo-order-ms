@@ -28,7 +28,8 @@ git remote add origin https://github.com/jbcodeforce/eda-demo-order-ms.git
 git push -u origin main
 ```
 
-The code is coming from the eda-quickstart repository, 
+The code is coming from the eda-quickstart repository.
+
 
 ## Running the application in dev mode
 
@@ -38,7 +39,75 @@ The code is coming from the eda-quickstart repository,
 quarkus dev
 ```
 
-Access the dev console
+Access the swagger-ui http://localhost:8080/q/swagger-ui
+
+Go a GET on `/api/v1/orders` or using
+
+```sh
+curl -X 'GET' 'http://localhost:8080/api/v1/orders' -H 'accept: application/json'
+```
+
+Do a POST on `/api/v1/orders`.
+
+Get the container id or name for redpanda and rexec into it, something like:
+
+```sh
+docker exec -ti f0db7829b31f bash
+```
+
+Then use rpk CLI to get the records sent as a CloudEvent.
+
+```sh
+rpk topic consume eda-demo-orders 
+```
+
+Output example:
+
+```json
+ "headers": [
+  {
+   "key": "ce_specversion",
+   "value": "1.0"
+  },
+  {
+   "key": "ce_id",
+   "value": "b77c955f-cfab-441a-8472-f2c4063a5002"
+  },
+  {
+   "key": "ce_type",
+   "value": "OrderEvent"
+  },
+  {
+   "key": "ce_source",
+   "value": "https://github.com/jbcodeforce/eda-demo-order-ms"
+  },
+  {
+   "key": "ce_subject",
+   "value": "OrderManager"
+  },
+  {
+   "key": "ce_time",
+   "value": "2022-01-07T17:09:24.694153America/Los_Angeles"
+  },
+  {
+   "key": "apicurio.value.globalId",
+   "value": "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0001"
+  },
+  {
+   "key": "apicurio.value.encoding",
+   "value": "BINARY"
+  }
+ ],
+ "key": "string",
+ "message": "\u000cstring\u000cstring\u000cstring\u0014\u000epending\u000cstring\u000cstring\u000cstring\u000cstring\u000cstring\u000cstring\u000cstring\"OrderCreatedEvent",
+ "partition": 0,
+ "offset": 0,
+ "timestamp": "2022-01-08T01:09:24.898Z"
+}
+```
+
+
+## Running the app with Strimzi
 
 * You mays also start Kafka with docker compose using the compose file provided
 

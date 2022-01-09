@@ -1,4 +1,4 @@
-name: Build & push images for 'Vaccine solution - order manager'
+name: Build & push images for 'order manager demo'
 on:
   push:
     branches:

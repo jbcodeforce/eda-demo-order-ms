@@ -3,7 +3,7 @@ kind: ConfigMap
 metadata:
   name: eda-demo-order-mgr-cm
 data:
-  KAFKA_BOOTSTRAP_SERVERS: garage-kafka-bootstrap.cp4i.svc:9093
+  KAFKA_BOOTSTRAP_SERVERS: dev-kafka-bootstrap.edademo-dev.svc:9093
   KAFKA_TOPIC_NAME: edademo-orders
   KAFKA_SECURITY_PROTOCOL: PLAINTEXT
   MP_MESSAGING_OUTGOING_ORDERS_TOPIC: edademo-orders

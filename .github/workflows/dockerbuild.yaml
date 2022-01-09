@@ -2,7 +2,7 @@ name: Build & push images for 'order manager demo'
 on:
   push:
     branches:
-      - master
+      - main
     paths-ignore:
       - 'docs/**'
       - 'scripts/**'

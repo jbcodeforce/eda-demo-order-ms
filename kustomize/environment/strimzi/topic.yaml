@@ -8,4 +8,4 @@ spec:
   partitions: 1
   replicas: 1
   config:
-    cleanup.policy: compact
+    cleanup.policy: delete

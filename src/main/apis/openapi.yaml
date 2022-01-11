@@ -52,7 +52,10 @@ paths:
                                                 zipcode: '92000'
                                             status: pending
                                             creationDate: 2021/12/06
-                    description: OK
+                    description: Get the list of orders
+            operationId: GetOrders
+            summary: Get list of orders
+            description: Get the list of the orders in the data source
         put:
             requestBody:
                 content:
@@ -68,6 +71,9 @@ paths:
                             schema:
                                 $ref: '#/components/schemas/OrderDTO'
                     description: OK
+            operationId: UpdateOrder
+            summary: Update existing order
+            description: Update an existing order back to the data source
         post:
             requestBody:
                 content:
@@ -108,24 +114,10 @@ paths:
                                             state: CA
                                             zipcode: '92000'
                                         creationDate: '2022-01-11'
-                    description: OK
-    /api/v1/orders/{id}:
-        get:
-        tags:
-        - Order Resource
-        parameters:
-        - name: id
-            in: path
-            required: true
-            schema:
-            type: string
-        responses:
-            "200":
-            description: OK
-            content:
-                application/json:
-                schema:
-                    $ref: '#/components/schemas/OrderDTO'
+                    description: Create an Order
+            operationId: CreateOrder
+            summary: Create new order
+            description: Create a new order to the data source, emit OrderCreated event
     /api/v1/version:
         get:
             tags:
@@ -137,6 +129,30 @@ paths:
                             schema:
                                 type: string
                     description: OK
+    '/api/v1/orders/{id}':
+        get:
+            responses:
+                '200':
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/OrderDTO'
+                            examples:
+                                order:
+                                    value:
+                                        productID: P01
+                                        customerID: C01
+                                        quantity: 30
+                                        destinationAddress:
+                                            street: 12 main street
+                                            city: san francisco
+                                            country: USA
+                                            state: CA
+                                            zipcode: '92000'
+            operationId: FindOrderByID
+            summary: Find order given the order ID
+            description: Find order given the order ID from the data source
+
 components:
     schemas:
         Address:
@@ -168,7 +184,3 @@ components:
                     $ref: '#/components/schemas/Address'
                 creationDate:
                     type: string
-tags:
-    -
-        name: eda
-        description: IBM Event Driven Architecture

@@ -1,9 +1,9 @@
 package ibm.eda.demo.ordermgr.domain;
 
-import java.util.UUID;
-
-import ibm.eda.demo.ordermgr.infra.api.dto.OrderDTO;
-
+/**
+ * Represent the business entity for an Order. 
+ * May include business functions in the future
+ */
 public class OrderEntity {
 	public static final String PENDING_STATUS = "pending";
     public static final String CANCELLED_STATUS = "cancelled";
@@ -38,17 +38,6 @@ public class OrderEntity {
 		this.deliveryAddress = deliveryAddress;
 		this.status = status;
 		this.creationDate = creation;
-	}
-	
-	public static OrderEntity from(OrderDTO orderDTO) {
-		OrderEntity orderEntity = new OrderEntity(UUID.randomUUID().toString(),
-		orderDTO.getProductID(),
-		orderDTO.getCustomerID(),
-		orderDTO.getQuantity(),
-		orderDTO.getDestinationAddress(),
-		orderDTO.getCreationDate(),
-        OrderEntity.PENDING_STATUS);
-		return orderEntity;
 	}
 
 	public String getStatus() {

@@ -1,103 +1,174 @@
----
 openapi: 3.0.3
 info:
-  title: Order Management service API
-  description: Demo for Order Management service
-  contact:
-    name: IBM Garage Solution Engineering
-    url: http://https://ibm-cloud-architecture.github.io/refarch-eda/
-    email: noone@superemail.com
-  license:
-    name: Apache 2.0
-    url: http://www.apache.org/licenses/LICENSE-2.0.html
-  version: 1.0.0
-tags:
-- name: eda
-  description: IBM Event Driven Architecture
+    title: Order Management service API
+    version: 1.0.0
+    description: Demo for Order Management service
+    contact:
+        name: IBM Garage Solution Engineering
+        url: 'http://https://ibm-cloud-architecture.github.io/refarch-eda/'
+        email: agilebusinessruledevelopment@gmail.com
+    license:
+        name: Apache 2.0
+        url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
 paths:
-  /api/v1/orders:
-    get:
-      tags:
-      - Order Resource
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/OrderDTO'
-    put:
-      tags:
-      - Order Resource
-      requestBody:
-        content:
-          application/json:
+    /api/v1/orders:
+        get:
+            tags:
+                - Order Resource
+            responses:
+                '200':
+                    content:
+                        application/json:
+                            schema:
+                                type: array
+                                items:
+                                    $ref: '#/components/schemas/OrderDTO'
+                            examples:
+                                currentOrders:
+                                    value:
+                                        -
+                                            orderID: Order01
+                                            productID: P01
+                                            customerID: C01
+                                            quantity: 10
+                                            deliveryAddress:
+                                                street: 12 main street
+                                                city: san francisco
+                                                country: USA
+                                                state: CA
+                                                zipcode: '92000'
+                                            status: pending
+                                            creationDate: 2021/12/06
+                                        -
+                                            orderID: Order02
+                                            productID: P02
+                                            customerID: C03
+                                            quantity: 7
+                                            deliveryAddress:
+                                                street: 12 blue horizon avenue
+                                                city: san francisco
+                                                country: USA
+                                                state: CA
+                                                zipcode: '92000'
+                                            status: pending
+                                            creationDate: 2021/12/06
+                    description: OK
+        put:
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/OrderDTO'
+            tags:
+                - Order Resource
+            responses:
+                '200':
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/OrderDTO'
+                    description: OK
+        post:
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/OrderDTO'
+                        examples:
+                            orderToSanFrancisco:
+                                value:
+                                    productID: P01
+                                    customerID: C01
+                                    quantity: 30
+                                    destinationAddress:
+                                        street: 12 main street
+                                        city: san francisco
+                                        country: USA
+                                        state: CA
+                                        zipcode: '92000'
+            tags:
+                - Order Resource
+            responses:
+                '200':
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/OrderDTO'
+                            examples:
+                                orderCreated:
+                                    value:
+                                        orderID: 4014cbe6-cb43-4a0a-a67e-645ee82ac747
+                                        customerID: C01
+                                        productID: P01
+                                        quantity: 30
+                                        destinationAddress:
+                                            street: 12 main street
+                                            city: san francisco
+                                            country: USA
+                                            state: CA
+                                            zipcode: '92000'
+                                        creationDate: '2022-01-11'
+                    description: OK
+    /api/v1/orders/{id}:
+        get:
+        tags:
+        - Order Resource
+        parameters:
+        - name: id
+            in: path
+            required: true
             schema:
-              $ref: '#/components/schemas/OrderDTO'
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/OrderDTO'
-    post:
-      tags:
-      - Order Resource
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/OrderDTO'
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/OrderDTO'
-  /api/v1/version:
-    get:
-      tags:
-      - Version Resource
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                type: string
+            type: string
+        responses:
+            "200":
+            description: OK
+            content:
+                application/json:
+                schema:
+                    $ref: '#/components/schemas/OrderDTO'
+    /api/v1/version:
+        get:
+            tags:
+                - Version Resource
+            responses:
+                '200':
+                    content:
+                        application/json:
+                            schema:
+                                type: string
+                    description: OK
 components:
-  schemas:
-    Address:
-      type: object
-      properties:
-        street:
-          type: string
-        city:
-          type: string
-        country:
-          type: string
-        state:
-          type: string
-        zipcode:
-          type: string
-    OrderDTO:
-      type: object
-      properties:
-        orderID:
-          type: string
-        customerID:
-          type: string
-        productID:
-          type: string
-        quantity:
-          format: int32
-          type: integer
-        destinationAddress:
-          $ref: '#/components/schemas/Address'
-        creationDate:
-          type: string
-
+    schemas:
+        Address:
+            type: object
+            properties:
+                street:
+                    type: string
+                city:
+                    type: string
+                country:
+                    type: string
+                state:
+                    type: string
+                zipcode:
+                    type: string
+        OrderDTO:
+            type: object
+            properties:
+                orderID:
+                    type: string
+                customerID:
+                    type: string
+                productID:
+                    type: string
+                quantity:
+                    format: int32
+                    type: integer
+                destinationAddress:
+                    $ref: '#/components/schemas/Address'
+                creationDate:
+                    type: string
+tags:
+    -
+        name: eda
+        description: IBM Event Driven Architecture

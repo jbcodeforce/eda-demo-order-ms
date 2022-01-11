@@ -95,5 +95,9 @@ public class OrderService {
 		return order;
     }
 
+    public OrderEntity findById(String id) {
+        return repository.findById(id);
+    }
+
 	
 }

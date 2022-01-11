@@ -5,6 +5,10 @@ import java.util.UUID;
 import ibm.eda.demo.ordermgr.domain.Address;
 import ibm.eda.demo.ordermgr.domain.OrderEntity;
 
+
+/**
+ * Data Transfert Object used to do not expose the Entity as-is.
+ */
 public class OrderDTO {
 	public String orderID;
 	public String customerID;

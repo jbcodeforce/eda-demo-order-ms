@@ -11,7 +11,9 @@ import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 
 import ibm.eda.demo.ordermgr.domain.OrderEntity;
@@ -37,6 +39,18 @@ public class OrderResource {
             l.add(OrderDTO.fromEntity(order));
         }
         return Multi.createFrom().items(l.stream());
+    }
+
+    @GET
+    @Path("/{id}")
+    public Uni<OrderDTO> get(@PathParam("id") String id) {
+        logger.info("In get order with id: " + id);
+        OrderEntity order = service.findById(id);
+        if (order == null) {
+            throw new WebApplicationException("Order with id of " + id + " does not exist.", 404);
+     
+        }
+        return Uni.createFrom().item(OrderDTO.fromEntity(order));
     }
 
     @POST

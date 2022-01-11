@@ -30,6 +30,7 @@ public class OrderRepositoryMem implements OrderRepository {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        repo.values().stream().forEach(v -> System.out.println(v.orderID));
     }
 
     public List<OrderEntity> getAll(){
@@ -42,5 +43,10 @@ public class OrderRepositoryMem implements OrderRepository {
 
     public void updateOrder(OrderEntity entity) {
         repo.put(entity.getOrderID(), entity);
+    }
+
+    @Override
+    public OrderEntity findById(String key) {
+        return repo.get(key);
     }
 }

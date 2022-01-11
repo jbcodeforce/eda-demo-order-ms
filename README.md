@@ -1,7 +1,7 @@
 # Quarkus app for producing Order events to Kafka using reactive messaging
 
 This code is to present a Microprofile reactive messaging producer with Schema registry integration.
-This is an instantiation of EDA Quickstart template.
+This is an instantiation of EDA Quickstart template named: [quarkus-reactive-kafka-producer](https://github.com/ibm-cloud-architecture/eda-quickstarts/tree/main/quarkus-reactive-kafka-producer).
 
 ## How this app was created
 
@@ -28,18 +28,18 @@ git remote add origin https://github.com/jbcodeforce/eda-demo-order-ms.git
 git push -u origin main
 ```
 
-The code is coming from the eda-quickstart repository.
+The code is coming from the eda-quickstart templates repository folder: `quarkus-reactive-kafka-producer`.
 
 
 ## Running the application in dev mode
 
-* **Dev mode**: You can run your application in dev mode (which will start RedPanda Kafka in a container) that enables live coding using:
+* **Dev mode**: You can run your application in quarkus dev mode (which starts RedPanda Kafka and Apicurio in containers) to enable live coding using:
 
 ```shell script
 quarkus dev
 ```
 
-Access the swagger-ui http://localhost:8080/q/swagger-ui
+Access the application swagger-ui http://localhost:8080/q/swagger-ui
 
 Go a GET on `/api/v1/orders` or using
 
@@ -109,7 +109,7 @@ Output example:
 
 ## Running the app with Strimzi
 
-* You mays also start Kafka with docker compose using the compose file provided
+* You may be also able to start Kafka with docker compose using the compose file provided
 
 ```sh
 docker compose up -d

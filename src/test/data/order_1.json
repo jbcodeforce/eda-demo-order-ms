@@ -1,5 +1,4 @@
-{
-    "productID": "P01",
+{   "productID": "P01",
     "customerID": "C01",
     "quantity": 30,
     "destinationAddress": {

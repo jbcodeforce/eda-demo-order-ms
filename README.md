@@ -30,16 +30,15 @@ git push -u origin main
 
 The code is coming from the eda-quickstart templates repository folder: `quarkus-reactive-kafka-producer`.
 
-
 ## Running the application in dev mode
 
-* **Dev mode**: You can run your application in quarkus dev mode (which starts RedPanda Kafka and Apicurio in containers) to enable live coding using:
+* **Dev mode**: You can run your application in quarkus dev mode (which starts RedPanda Kafka and Apicurio 2.x in containers) to enable live coding using:
 
 ```shell script
 quarkus dev
 ```
 
-Access the application swagger-ui http://localhost:8080/q/swagger-ui
+* Access the application swagger-ui http://localhost:8080/q/swagger-ui
 
 Go a GET on `/api/v1/orders` or using
 
@@ -47,7 +46,11 @@ Go a GET on `/api/v1/orders` or using
 curl -X 'GET' 'http://localhost:8080/api/v1/orders' -H 'accept: application/json'
 ```
 
-Do a POST on `/api/v1/orders`.
+Using the Swagger-ui do a POST on `/api/v1/orders` or
+
+```sh
+curl -X 'POST' 'http://localhost:8080/api/v1/orders' -H 'accept: application/json' -H 'Content-Type: application/json' -d @./src/test/data/order_1.json
+```
 
 Get the container id or name for redpanda and rexec into it, something like:
 
@@ -55,7 +58,7 @@ Get the container id or name for redpanda and rexec into it, something like:
 docker exec -ti f0db7829b31f bash
 ```
 
-Then use rpk CLI to get the records sent as a CloudEvent.
+* Then use rpk CLI to get the records sent as a CloudEvent.
 
 ```sh
 rpk topic consume eda-demo-orders 
@@ -106,26 +109,49 @@ Output example:
 }
 ```
 
+* Get access to Apicurio UI to verify schema definition is uploaded.
+
+```sh
+# look at the port number apicurio is listening too
+docker ps
+# Use web browser on something like
+http://localhost:64109/ui/artifacts/
+# or curl
+curl -X 'GET' 'http://localhost:64109/apis/registry/v2/search/artifacts?name=eda-demo-orders-value&offset=0&limit=20' \
+  -H 'accept: application/json'
+```
+
+You should get a response like
+
+```
+{"artifacts":[{"id":"eda-demo-orders-value","name":"OrderEvent","createdOn":"2022-01-12T00:57:11+0000","createdBy":"","type":"AVRO","state":"ENABLED","modifiedOn":"2022-01-12T00:57:11+0000","modifiedBy":""}],"count":1}%  
+```
 
 ## Running the app with Strimzi
 
 * You may be also able to start Kafka with docker compose using the compose file provided
+in the [eda-demo-order-gitops gitops project](https://github.com/jbcodeforce/eda-demo-order-gitops): 
 
 ```sh
+# under local-demo folder
 docker compose up -d
 ```
 
 you should see four containers running:
 
-```
+```sh
  ⠿ Container zookeeper      Started                                                                                                                     1.0s
- ⠿ Container kafka          Started                                                                                                                     1.9s
+ ⠿ Container kafka          Started     
+ ⠿ Container apicurio       Started
+ ⠿ Container kafdrop        Started  
+ ⠿ Container ordermsapp     Started                                                                                                         1.9s
 ```
 
 * Create the needed topics:
 
 ```
-./scripts/createTopic.sh
+# under local-demo folder
+./createTopic.sh
 ```
 
 * Go to the swagger UI: [http://localhost:8080/q/swagger-ui/](http://localhost:8080/q/swagger-ui/) or use
@@ -135,10 +161,10 @@ the following calls to get the connection to Kafka started:
 curl -X 'GET' 'http://localhost:8080/api/v1/orders' -H 'accept: application/json'
 ```
 
-* Go to Kafdrop console [http://localhost:9000/](http://localhost:9000/) to see messages in topic.
+* Go to Kafdrop console [http://localhost:9000/](http://localhost:9000/) to see messages in `orders` topic.
 
-
-> **_NOTE:_**  Quarkus now ships with a Dev UI, which is available in dev mode only at http://localhost:8080/q/dev/.
+* Go to apicurio registry UI:  [http://localhost:8081/ui](http://localhost:8081/ui) to see the 
+schema uploaded
 
 ## Packaging and running the application
 
@@ -146,26 +172,13 @@ The application can be packaged using:
 
 ```shell script
 ./mvnw package
+# or with docker build and docker push
+./script/buildAll.sh push
 ```
-
-It produces the `quarkus-run.jar` file in the `target/quarkus-app/` directory.
-Be aware that it’s not an _über-jar_ as the dependencies are copied into the `target/quarkus-app/lib/` directory.
-
-The application is now runnable using `java -jar target/quarkus-app/quarkus-run.jar`.
-
-If you want to build an _über-jar_, execute the following command:
-
-```shell script
-./mvnw package -Dquarkus.package.type=uber-jar
-```
-The application, packaged as an _über-jar_, is now runnable using `java -jar target/*-runner.jar`.
-
-We have also done a `scripts/buildAll` that you can reuse to compile, package the quarkus app,
-build a docker image and push it to a registry.
 
 ### Build and deploy on OpenShift using source to image
 
-We assume you have Event Streams  or Strimzi cluster deployed.
+We assume you have Event Streams or Strimzi cluster deployed in one project.
 
 * Create a OpenShift project: `oc new-project orderdemo`
 * Copy secrets for ca-certificates and tls-user
@@ -181,6 +194,7 @@ We assume you have Event Streams  or Strimzi cluster deployed.
   ```
 
 * Build and deploy
+
 ```sh
 mvn clean package -Dquarkus.container-image.build=true -Dquarkus.kubernetes.deploy=true -DskipTests
 ```
@@ -226,15 +240,12 @@ route.route.openshift.io/qs-order-ms created
 
 ## Integrating with GitOps
 
-In the `kustomize` folder we have defined configmap, deployment,... that you can reuse to
-deploy your app to OpenShift. Doing an `oc apply -k kustomize` will deploy the current
-template to an OpenShift project.
-
 If you use OpenShift GitOps to deploy your solution, you can create your GitOps project with the kam CLI 
 and then create a folder in the `environment/dev/apps` with the name
 of your app based on this code, then copy the `kustomize` folder content under this newly
 created folder. After that you need to add an Argocd app under the `config` folder.
 
+See [this gitops](https://github.com/jbcodeforce/eda-demo-order-gitops) project to get more details on this deployment mode.
 
 ## Creating a native executable
 

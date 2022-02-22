@@ -10,13 +10,12 @@ import javax.ws.rs.Path;
 
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
-import ibm.eda.demo.ordermgr.domain.OrderService;
 import io.quarkus.runtime.StartupEvent;
 
 @Path("/api/v1/version")
 @ApplicationScoped
 public class VersionResource {
-    private static final Logger logger = Logger.getLogger(OrderService.class.getName());
+    private static final Logger logger = Logger.getLogger(VersionResource.class.getName());
 
     @Inject
     @ConfigProperty(name="app.version")

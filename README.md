@@ -38,6 +38,8 @@ The code is coming from the eda-quickstart templates repository folder: `quarkus
 quarkus dev
 ```
 
+### Demonstration steps
+
 * Access the application swagger-ui http://localhost:8080/q/swagger-ui
 
 Go a GET on `/api/v1/orders` or using
@@ -46,13 +48,13 @@ Go a GET on `/api/v1/orders` or using
 curl -X 'GET' 'http://localhost:8080/api/v1/orders' -H 'accept: application/json'
 ```
 
-Using the Swagger-ui do a POST on `/api/v1/orders` or
+* Using the Swagger-ui do a POST on `/api/v1/orders` or
 
 ```sh
 curl -X 'POST' 'http://localhost:8080/api/v1/orders' -H 'accept: application/json' -H 'Content-Type: application/json' -d @./src/test/data/order_1.json
 ```
 
-Get the container id or name for redpanda and rexec into it, something like:
+* When running in dev mode get the container id or name for redpanda and rexec into it, something like:
 
 ```sh
 docker exec -ti f0db7829b31f bash
@@ -221,9 +223,10 @@ mvn clean package -Dquarkus.container-image.build=true -Dquarkus.kubernetes.depl
 
 In the `kustomize` folder we have defined configmap, deployment,... that you can reuse to
 deploy your app to OpenShift. 
-Update the `deployment.yaml` to reflect the secret names you are using for TLS user and ca cert.
 
-Doing an `oc apply -k kustomize` will deploy the current
+* Update the `deployment.yaml` to reflect the secret names you are using for TLS user and ca cert.
+* Update the configMap for the Apicurio URL to use external route.
+* Doing an `oc apply -k kustomize` will deploy the current
 `quay.io/ibmcase/eda-qs-order-ms` image to an OpenShift project. 
 
 The following elements are created:

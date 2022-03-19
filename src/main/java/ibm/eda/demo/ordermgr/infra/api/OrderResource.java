@@ -16,8 +16,13 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 
+import org.eclipse.microprofile.metrics.MetricUnits;
+import org.eclipse.microprofile.metrics.annotation.Counted;
+import org.eclipse.microprofile.metrics.annotation.Timed;
+
 import ibm.eda.demo.ordermgr.domain.OrderEntity;
 import ibm.eda.demo.ordermgr.domain.OrderService;
+import ibm.eda.demo.ordermgr.infra.api.dto.ControlDTO;
 import ibm.eda.demo.ordermgr.infra.api.dto.OrderDTO;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
@@ -54,6 +59,8 @@ public class OrderResource {
     }
 
     @POST
+    @Counted(name = "performedNewOrderCreation", description = "How many post new order have been performed.")
+    @Timed(name = "checksTimer", description = "A measure of how long it takes to perform the operation.", unit = MetricUnits.MILLISECONDS)
     public Uni<OrderDTO> saveNewOrder(OrderDTO order) {
         logger.info("POST operation " + order.toString());
         OrderEntity entity = OrderDTO.toEntity(order);
@@ -65,6 +72,14 @@ public class OrderResource {
         logger.info("PUT operation " + order.toString());
         OrderEntity entity = OrderDTO.toEntity(order);
         return Uni.createFrom().item(OrderDTO.fromEntity(service.updateOrder(entity)));
+    }
+
+    @POST
+    @Path("/control")
+    public Uni<ControlDTO> startSimulation(ControlDTO control) {
+        service.startSimulation(control.backend,control.records);
+        control.status = "Started";
+        return Uni.createFrom().item(control);
     }
     
 }

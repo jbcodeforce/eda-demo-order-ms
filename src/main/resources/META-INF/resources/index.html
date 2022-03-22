@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Event Driven Kafka Producer API example</title>
+    <title>Order Management Service</title>
     <style>
         h1, h2, h3, h4, h5, h6 {
             margin-bottom: 0.5rem;
@@ -109,34 +109,21 @@
 <body>
 
 <div class="banner lead">
-    Your new Event Driven Kafka Producer API example is ready!
+    Order Management Service is ready!
 </div>
 
 <div class="container">
     <div class="left-column">
-        <p class="lead"> Congratulations, you have created a new Event Driven Quarkus cloud application.</p>
+        <p class="lead"> Simple order management microservice with simulator capability.</p>
 
-        <p>This page is served by Quarkus. The source is in
-            <code>src/main/resources/META-INF/resources/index.html</code>.</p>
+        <p>This page is served by Quarkus app.</p>
 
-        <h2>What are your next steps?</h2>
-
-        <p>If not already done, run the application in <em>dev mode</em> using: <code>./mvnw compile quarkus:dev</code>.
-        </p>
-        <ul>
-            <li>Your static assets are located in <code>src/main/resources/META-INF/resources</code>.</li>
-            <li>Configure your application in <code>src/main/resources/application.properties</code>.</li>
-            <li>Quarkus now ships with a <a href="/q/dev/">Dev UI</a> (available in dev mode only)</li>
-            <li>Play with the provided code located in <code>src/main/java</code>:</li>
-        </ul>
-                <div class="provided-code">
+        <div class="provided-code">
             <h3>RESTEasy JAX-RS</h3>
             <p>Easily start your RESTful Web Services by looking at the app version</p>
             <p><code>@Path: <a href="/api/v1/version" class="path-link" target="_blank">/api/v1/version</a></code></p>
             <p>Or better use the Swagger UI</p>
             <p><code>@Path: <a href="/q/swagger-ui" class="path-link" target="_blank">/q/swagger-ui</a></code></p>
-            
-            <p><a href="https://quarkus.io/guides/getting-started#the-jax-rs-resources" class="guide-link" target="_blank">Related guide section...</a></p>
         </div>
 
     </div>
@@ -145,18 +132,20 @@
             <h3>Application</h3>
             <ul>
                 <li>GroupId: <code>ibm.eda.demo</code></li>
-                <li>ArtifactId: <code>eda-qs-order-ms</code></li>
-                <li>Version: <code>0.0.5</code></li>
-                <li>Quarkus Version: <code>2.5.3.Final</code></li>
+                <li>ArtifactId: <code>eda-demo-order-ms</code></li>
+                <li>Version: <code>0.0.7</code></li>
+                <li>Quarkus Version: <code>2.7.4.Final</code></li>
             </ul>
         </div>
         <div class="right-section">
             <h3>More reading</h3>
             <ul>
+                <li><a href="https://github.com/jbcodeforce/eda-demo-order-ms" target="_blank">Repository code source</a></li>
                 <li><a href="https://quarkus.io/guides/maven-tooling" target="_blank">Setup your IDE</a></li>
-                <li><a href="https://quarkus.io/guides/getting-started" target="_blank">Getting started</a></li>
-                <li><a href="https://quarkus.io/guides/" target="_blank">All guides</a></li>
-                <li><a href="https://quarkus.io" target="_blank">Quarkus Web Site</a></li>
+                <li><a href="https://quarkus.io/guides/getting-started" target="_blank">Quarkus Getting started</a></li>
+                <li><a href="https://github.com/jbcodeforce/eda-demo-order-gitops/tree/main/environments/herb" target="_blank">Demo Script</a></li>
+                <li><a href="https://github.com/jbcodeforce/eda-demo-order-gitops" target="_blank">GitOps for the solution</a></li>
+                <li><a href="https://github.com/ibm-cloud-architecture/refarch-eda" target="_blank">EDA Reference Architecture</a></li>
             </ul>
         </div>
     </div>

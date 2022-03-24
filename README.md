@@ -129,10 +129,17 @@ You should get a response like
 {"artifacts":[{"id":"eda-demo-orders-value","name":"OrderEvent","createdOn":"2022-01-12T00:57:11+0000","createdBy":"","type":"AVRO","state":"ENABLED","modifiedOn":"2022-01-12T00:57:11+0000","modifiedBy":""}],"count":1}%  
 ```
 
-## Running the app with Strimzi
+* Start the simulation
+
+```sh
+./e2e/startSimulation.sh localhost:8080 20
+```
+
+
+## Running the app with Event Streams, Apicurio, Kafdrop
 
 * You may be also able to start Kafka with docker compose using the compose file provided
-in the [eda-demo-order-gitops gitops project](https://github.com/jbcodeforce/eda-demo-order-gitops): 
+in this folder: 
 
 ```sh
 # under local-demo folder
@@ -142,19 +149,13 @@ docker compose up -d
 you should see four containers running:
 
 ```sh
- ⠿ Container zookeeper      Started                                                                                                                     1.0s
+ ⠿ Container zookeeper      Started                                                                                                                     
  ⠿ Container kafka          Started     
  ⠿ Container apicurio       Started
  ⠿ Container kafdrop        Started  
- ⠿ Container ordermsapp     Started                                                                                                         1.9s
-```
-
-* Create the needed topics:
 
 ```
-# under local-demo folder
-./createTopic.sh
-```
+* Start `quarkus dev`
 
 * Go to the swagger UI: [http://localhost:8080/q/swagger-ui/](http://localhost:8080/q/swagger-ui/) or use
 the following calls to get the connection to Kafka started:
@@ -167,6 +168,12 @@ curl -X 'GET' 'http://localhost:8080/api/v1/orders' -H 'accept: application/json
 
 * Go to apicurio registry UI:  [http://localhost:8081/ui](http://localhost:8081/ui) to see the 
 schema uploaded
+
+* Start the simulation
+
+```sh
+./e2e/startSimulation.sh localhost:8080 20
+```
 
 ## Packaging and running the application
 

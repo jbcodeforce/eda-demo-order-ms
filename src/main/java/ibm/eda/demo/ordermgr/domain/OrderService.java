@@ -3,6 +3,7 @@ package ibm.eda.demo.ordermgr.domain;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.CompletableFuture;
 import java.util.logging.Logger;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -17,15 +18,17 @@ import ibm.eda.demo.ordermgr.infra.events.Address;
 import ibm.eda.demo.ordermgr.infra.events.OrderEvent;
 import ibm.eda.demo.ordermgr.infra.repo.OrderRepository;
 import io.smallrye.reactive.messaging.kafka.KafkaRecord;
+import io.smallrye.reactive.messaging.kafka.api.OutgoingKafkaRecordMetadata;
 
 
 @ApplicationScoped
 public class OrderService {
 	private static final Logger logger = Logger.getLogger(OrderService.class.getName());
-
+	private static final String[] possibleStates = { "Pending", "Assigned", "Closed", "Booked", "Rejected","Cancelled", "OnHold"};
 	@ConfigProperty(name="mp.messaging.outgoing.orders.topic")
 	public String topicName;
-
+	@ConfigProperty(name="app.pace_ms")
+	public int pace_ms;
 	@Inject
 	public OrderRepository repository;
     @Channel("orders")
@@ -56,8 +59,11 @@ public class OrderService {
 				"OrderCreatedEvent");	
 		try {
 			
-			Message<OrderEvent> record = KafkaRecord.of(order.getOrderID(),orderPayload);
+			/* another way
+			Message<OrderEvent> record = KafkaRecord.of(order.getCustomerID(),orderPayload);
 			eventProducer.send(record);
+			*/
+			sendOrder(orderPayload);
 			logger.info("order created event sent for " + order.getOrderID() + " to topic " + topicName);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -93,7 +99,7 @@ public class OrderService {
 				"OrderUpdateEvent");	
 			try {
 				logger.info("emit order updated event for " + order.getOrderID());
-				eventProducer.send(orderPayload);
+				sendOrder(orderPayload);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -108,28 +114,47 @@ public class OrderService {
 		// backend if for future
 		Random r = new Random();
 		for (int o = 0; o < records; o++){
-			Address deliveryAddress = new Address(Integer.toString(r.nextInt(50)) + " main street"
-			,"City_" + r.nextInt(5)
-			, "USA"
-			,"CA","95000");
+			String newState = possibleStates[r.nextInt(possibleStates.length)];
+			String eventType = "OrderUpdateEvent";
+			if ("Closed".equals(newState)) {
+				eventType= "OrderCloseEvent";
+			}
+			if ("Pending".equals(newState)) {
+				eventType= "OrderCreatedEvent";
+			}
+			Address deliveryAddress = new Address(
+				"City_" + r.nextInt(5),
+				"USA",
+				"CA",Integer.toString(r.nextInt(50)) + " main street","95000");
 			OrderEvent orderPayload =  new OrderEvent("Order_" + o,
 			"P0" + r.nextInt(5),
 			"C0" + r.nextInt(2000),
 			r.nextInt(10),
-			OrderEntity.PENDING_STATUS,
+			newState,
 			LocalDate.now().toString(),
 			LocalDate.now().toString(),
 			deliveryAddress,
-			"OrderCreatedEvent");
+			eventType);
 			logger.info("emit order updated event for " + orderPayload.getOrderID());
-			eventProducer.send(orderPayload);
+			sendOrder(orderPayload);
 			try {
-				Thread.currentThread().sleep(1000);
+				Thread.currentThread().sleep(pace_ms);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
 		}
     }
 
+	public void sendOrder(OrderEvent orderPayload){
+		eventProducer.send(Message.of(orderPayload).addMetadata(OutgoingKafkaRecordMetadata.<String>builder()
+			.withKey(orderPayload.getCustomerID()).build())
+			.withAck( () -> {
+				
+				return CompletableFuture.completedFuture(null);
+			})
+			.withNack( throwable -> {
+				return CompletableFuture.completedFuture(null);
+			}));
+	}
 	
 }

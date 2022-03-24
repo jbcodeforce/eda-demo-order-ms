@@ -5,12 +5,13 @@ package ibm.eda.demo.ordermgr.domain;
  * May include business functions in the future
  */
 public class OrderEntity {
-	public static final String PENDING_STATUS = "pending";
-    public static final String CANCELLED_STATUS = "cancelled";
-    public static final String ASSIGNED_STATUS = "assigned";
-    public static final String BOOKED_STATUS = "booked";
-    public static final String REJECTED_STATUS = "rejected";
-    public static final String COMPLETED_STATUS = "completed";
+	public static final String PENDING_STATUS = "Pending";
+    public static final String CANCELLED_STATUS = "Cancelled";
+    public static final String ASSIGNED_STATUS = "Assigned";
+    public static final String BOOKED_STATUS = "Booked";
+    public static final String REJECTED_STATUS = "Rejected";
+    public static final String COMPLETED_STATUS = "Closed";
+	public static final String ONHOLD_STATUS = "OnHold";
     
     public String orderID;
     public String productID;

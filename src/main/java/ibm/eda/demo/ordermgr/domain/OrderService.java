@@ -125,7 +125,7 @@ public class OrderService {
 			Address deliveryAddress = new Address(
 				"City_" + r.nextInt(5),
 				"USA",
-				"CA",Integer.toString(r.nextInt(50)) + " main street","95000");
+				"CA",Integer.toString(r.nextInt(50)) + " main street","95051");
 			OrderEvent orderPayload =  new OrderEvent("Order_" + o,
 			"P0" + r.nextInt(5),
 			"C0" + r.nextInt(2000),

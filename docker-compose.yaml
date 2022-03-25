@@ -67,4 +67,4 @@ services:
     depends_on:
       - kafka
     entrypoint: [ "bash",  "-c", "/opt/kafka/bin/kafka-topics.sh --bootstrap-server kafka:29092 --create  --if-not-exists --replication-factor 1 --partitions 1 --topic orders 
-            && /opt/kafka/bin/kafka-topics.sh --bootstrap-server kafka:29092 --create  --if-not-exists --replication-factor 1 --partitions 1 --topic order-metrics"]
+            && /opt/kafka/bin/kafka-topics.sh --bootstrap-server kafka:29092 --create  --if-not-exists --replication-factor 1 --partitions 1 --topic order.metrics"]

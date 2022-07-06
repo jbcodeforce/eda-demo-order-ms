@@ -10,7 +10,7 @@ We use the new Quarkus CLI to create the basic project:
 ```sh
 # Get the help
 quarkus create app --help
-# create a loan-origination bff app
+# create a order-microservice bff app
 quarkus create app  -x smallrye-openapi,smallrye-health,resteasy-mutiny,registry-avro,metrics,reactive-messaging-kafka ibm.eda.demo:eda-demo-order-ms:1.0.0
 # Verify the app works
 cd eda-demo-order-ms
@@ -38,11 +38,33 @@ The code is coming from the eda-quickstart templates repository folder: `quarkus
 quarkus dev
 ```
 
+All Kafka channels in SmallRye Reactive Messaging are automatically configured to use this registry. 
+
+```sh
+export REDPANDA=$(docker ps | grep redpanda | awk '{print $1}')
+# list topic
+docker exec $REDPANDA bash -c "rpk topic list"
+# consume from orders 
+docker exec -ti $REDPANDA bash
+rpk topic consume orders 
+```
+
+Get Apicur.io URL
+
+```sh
+export INSTID=$(docker ps | grep apicurio | awk '{print $1}')
+chrome http://localhost:$(docker inspect --format='{{(index (index .NetworkSettings.Ports "8080/tcp") 0).HostPort}}' $INSTID)
+```
+
+* [Quarkus Apicurio and Kafka guide](https://quarkus.io/guides/kafka-schema-registry-avro)
+* [See DEV SERVICES FOR APICURIO REGISTRY](https://quarkus.io/guides/apicurio-registry-dev-services)
+* [See DEV SERVICES FOR KAFKA](https://quarkus.io/guides/kafka-dev-services)
+
 ### Demonstration steps
 
 * Access the application swagger-ui http://localhost:8080/q/swagger-ui
 
-Go a GET on `/api/v1/orders` or using
+Go a GET on `/api/v1/orders` or using the following commend to get the list of orders:
 
 ```sh
 curl -X 'GET' 'http://localhost:8080/api/v1/orders' -H 'accept: application/json'
@@ -63,7 +85,7 @@ docker exec -ti f0db7829b31f bash
 * Then use rpk CLI to get the records sent as a CloudEvent.
 
 ```sh
-rpk topic consume eda-demo-orders 
+rpk topic consume orders 
 ```
 
 Output example:
@@ -142,7 +164,7 @@ You should get a response like
 in this folder: 
 
 ```sh
-# under local-demo folder
+# under the project folder
 docker compose up -d
 ```
 
@@ -155,7 +177,7 @@ you should see four containers running:
  ⠿ Container kafdrop        Started  
 
 ```
-* Start `quarkus dev`
+* Start `quarkus dev  -Dkafka.bootstrap.servers=localhost:9092 -Dmp.messaging.connector.smallrye-kafka.apicurio.registry.url=http://localhost:8081/apis/registry/v2`
 
 * Go to the swagger UI: [http://localhost:8080/q/swagger-ui/](http://localhost:8080/q/swagger-ui/) or use
 the following calls to get the connection to Kafka started:
@@ -182,7 +204,7 @@ The application can be packaged using:
 ```shell script
 ./mvnw package
 # or with docker build and docker push
-./script/buildAll.sh push
+./script/buildAll.sh
 ```
 
 ### Build and deploy on OpenShift using source to image

@@ -17,7 +17,6 @@ import org.eclipse.microprofile.reactive.messaging.Message;
 import ibm.eda.demo.ordermgr.infra.events.Address;
 import ibm.eda.demo.ordermgr.infra.events.OrderEvent;
 import ibm.eda.demo.ordermgr.infra.repo.OrderRepository;
-import io.smallrye.reactive.messaging.kafka.KafkaRecord;
 import io.smallrye.reactive.messaging.kafka.api.OutgoingKafkaRecordMetadata;
 
 
